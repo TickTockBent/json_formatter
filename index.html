@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Formatter & Validator | Fast Online JSON Beautifier Tool</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Free online JSON formatter and validator tool. Beautify, minify, and validate JSON data instantly. No ads, no tracking, built for developers by Clocktower & Associates.">
+    <meta name="keywords" content="format JSON online, validate JSON tool, JSON beautifier, JSON parser web tool, JSON formatter, JSON validator, JSON minifier">
+    <meta name="author" content="Clocktower & Associates">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="JSON Formatter & Validator - Fast Online Tool">
+    <meta property="og:description" content="Free online JSON formatter and validator. Beautify, minify, and validate JSON data instantly. No ads, no tracking, built for developers.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://json.clocktowerassoc.com">
+    <meta property="og:image" content="https://json.clocktowerassoc.com/og-image.svg">
+    <meta property="og:site_name" content="JSON Formatter by Clocktower">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="JSON Formatter & Validator - Fast Online Tool">
+    <meta name="twitter:description" content="Free online JSON formatter and validator. Beautify, minify, and validate JSON data instantly.">
+    <meta name="twitter:image" content="https://json.clocktowerassoc.com/og-image.svg">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://json.clocktowerassoc.com">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Prism.js for syntax highlighting -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body class="light-mode">
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1 class="logo-text">JSON Formatter</h1>
+                    <span class="logo-badge">by Clocktower</span>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <svg class="sun-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h2 class="hero-title">Fast JSON Formatter & Validator</h2>
+                <p class="hero-subtitle">Beautify, minify, and validate JSON data instantly. No ads, no tracking, just clean formatting.</p>
+            </section>
+
+            <!-- Tool Section -->
+            <section class="tool-section">
+                <div class="tool-grid">
+                    <!-- Input Panel -->
+                    <div class="panel input-panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">Input JSON</h3>
+                            <div class="panel-actions">
+                                <button class="btn btn-sm btn-secondary" id="pasteBtn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                    </svg>
+                                    Paste
+                                </button>
+                                <button class="btn btn-sm btn-secondary" id="clearInputBtn">Clear</button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <textarea 
+                                class="json-input" 
+                                id="jsonInput" 
+                                placeholder='Paste your JSON here... e.g., {"name": "Alice", "age": 30}'
+                                spellcheck="false"
+                            ></textarea>
+                            <div class="error-message" id="errorMessage"></div>
+                        </div>
+                    </div>
+
+                    <!-- Output Panel -->
+                    <div class="panel output-panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">Formatted JSON</h3>
+                            <div class="panel-actions">
+                                <div class="format-toggle">
+                                    <button class="toggle-btn active" data-format="beautify">Beautify</button>
+                                    <button class="toggle-btn" data-format="minify">Minify</button>
+                                </div>
+                                <button class="btn btn-sm btn-primary" id="copyBtn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                    Copy
+                                </button>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <pre class="json-output"><code class="language-json" id="jsonOutput"></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features">
+                <h3 class="features-title">Why Use Our JSON Formatter?</h3>
+                <div class="features-grid">
+                    <div class="feature">
+                        <div class="feature-icon">⚡</div>
+                        <h4 class="feature-title">Lightning Fast</h4>
+                        <p class="feature-desc">Instant formatting with no server roundtrips</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🔒</div>
+                        <h4 class="feature-title">Privacy First</h4>
+                        <p class="feature-desc">Your data never leaves your browser</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">✨</div>
+                        <h4 class="feature-title">Beautiful Output</h4>
+                        <p class="feature-desc">Syntax highlighted and perfectly formatted</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🛠️</div>
+                        <h4 class="feature-title">Developer Friendly</h4>
+                        <p class="feature-desc">Built by developers, for developers</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-text">
+                    Built with ❤️ by <a href="https://clocktowerassoc.com" target="_blank" rel="noopener" class="footer-link">Clocktower & Associates</a>
+                </p>
+                <div class="footer-links">
+                    <a href="https://github.com/clocktowerandassociates" target="_blank" rel="noopener" class="footer-link">GitHub</a>
+                    <span class="footer-separator">•</span>
+                    <a href="https://clocktowerassoc.com/support" target="_blank" rel="noopener" class="footer-link">Support Us</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
