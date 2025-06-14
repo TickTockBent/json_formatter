@@ -1,9 +1,9 @@
 {
-  "version": "1.20.107951",
+  "version": "1.21.3c70df",
   "major": 1,
-  "minor": 20,
-  "patch": "107951",
-  "timestamp": "2025-06-14T15:17:59Z",
-  "commit": "107951f49aea30e381f7e825b42679dd59cc0a39",
+  "minor": 21,
+  "patch": "3c70df",
+  "timestamp": "2025-06-14T15:23:58Z",
+  "commit": "3c70dff65a98068487019cc659d1d371e15295dc",
   "branch": "main"
 }
