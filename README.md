@@ -9,6 +9,7 @@ A fast, beautiful, and privacy-focused JSON formatter and validator tool built f
 - ⚡ **Lightning Fast** - Instant formatting with no server roundtrips
 - 🔒 **Privacy First** - Your data never leaves your browser
 - ✨ **Beautiful Output** - Syntax highlighted and perfectly formatted
+- 🔧 **Smart Auto-Fix** - Automatically repairs common JSON errors
 - 🎨 **Dark/Light Mode** - Easy on the eyes, day or night
 - 📋 **Copy to Clipboard** - One-click copying
 - 🔗 **URL Sharing** - Generate shareable links with JSON data
@@ -20,6 +21,23 @@ A fast, beautiful, and privacy-focused JSON formatter and validator tool built f
 - `Ctrl/Cmd + Enter` - Format JSON
 - `Ctrl/Cmd + Shift + C` - Copy formatted JSON
 - `Ctrl/Cmd + K` - Clear input
+
+## Auto-Fix Feature
+
+The JSON formatter includes a smart auto-fix feature that can repair common JSON errors automatically. When your JSON has syntax errors, a "Fix" button will appear that can handle:
+
+### What It Fixes:
+- **Trailing commas**: `{"name": "Alice",}` → `{"name": "Alice"}`
+- **Unquoted property names**: `{name: "Alice"}` → `{"name": "Alice"}`
+- **Single quotes**: `{'name': 'Alice'}` → `{"name": "Alice"}`
+- **Missing commas**: `{"a": 1 "b": 2}` → `{"a": 1, "b": 2}`
+- **Missing brackets**: `{"name": "Alice"` → `{"name": "Alice"}`
+- **Extra brackets**: `{"name": "Alice"}}` → `{"name": "Alice"}`
+
+### What It Won't Fix:
+This is a lightweight tool designed for common copy/paste errors. For complex structural issues, consider using dedicated JSON repair tools.
+
+**Perfect for**: Fixing JSON copied from code snippets, incomplete pastes, or data with wrong quote types.
 
 ## URL Sharing
 
