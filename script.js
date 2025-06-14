@@ -3,14 +3,35 @@ const jsonInput = document.getElementById('jsonInput');
 const jsonOutput = document.getElementById('jsonOutput');
 const errorMessage = document.getElementById('errorMessage');
 const themeToggle = document.getElementById('themeToggle');
+const generateBtn = document.getElementById('generateBtn');
 const pasteBtn = document.getElementById('pasteBtn');
 const clearInputBtn = document.getElementById('clearInputBtn');
+const shareBtn = document.getElementById('shareBtn');
 const copyBtn = document.getElementById('copyBtn');
 const formatToggleBtns = document.querySelectorAll('.toggle-btn');
 
 // State
 let currentFormat = 'beautify';
 let lastValidJson = null;
+let currentSampleIndex = 0;
+
+// Sample JSON data
+const sampleJsonData = [
+    // Simple user profile
+    `{"name":"Alice Johnson","age":28,"email":"alice@example.com","isActive":true,"skills":["JavaScript","Python","Go"],"address":{"street":"123 Main St","city":"San Francisco","zipCode":"94105"}}`,
+    
+    // E-commerce product
+    `{"id":"prod-001","title":"Wireless Bluetooth Headphones","price":89.99,"currency":"USD","inStock":true,"categories":["Electronics","Audio","Headphones"],"ratings":{"average":4.5,"count":127},"specifications":{"batteryLife":"30 hours","weight":"250g","colors":["black","white","blue"]}}`,
+    
+    // API response with nested data
+    `{"success":true,"data":{"users":[{"id":1,"username":"dev_user","profile":{"firstName":"John","lastName":"Doe","avatar":"https://example.com/avatar1.jpg"},"metadata":{"lastLogin":"2025-01-13T10:30:00Z","permissions":["read","write"]}},{"id":2,"username":"admin","profile":{"firstName":"Jane","lastName":"Smith","avatar":"https://example.com/avatar2.jpg"},"metadata":{"lastLogin":"2025-01-13T09:15:00Z","permissions":["read","write","admin"]}}],"pagination":{"page":1,"limit":10,"total":2}},"timestamp":"2025-01-13T10:35:22Z"}`,
+    
+    // Configuration file
+    `{"application":{"name":"MyApp","version":"1.2.3","environment":"production"},"database":{"host":"localhost","port":5432,"name":"myapp_db","ssl":true},"cache":{"enabled":true,"ttl":3600,"provider":"redis"},"features":{"analytics":true,"notifications":false,"betaFeatures":["newUI","advancedSearch"]},"logging":{"level":"info","outputs":["console","file"]}}`,
+    
+    // Simple array
+    `[{"task":"Review pull requests","completed":false,"priority":"high"},{"task":"Update documentation","completed":true,"priority":"medium"},{"task":"Deploy to staging","completed":false,"priority":"low"}]`
+];
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -21,8 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Set up event listeners
     jsonInput.addEventListener('input', debounce(formatJson, 300));
     themeToggle.addEventListener('click', toggleTheme);
+    generateBtn.addEventListener('click', generateSample);
     pasteBtn.addEventListener('click', pasteFromClipboard);
     clearInputBtn.addEventListener('click', clearInput);
+    shareBtn.addEventListener('click', generateShareLink);
     copyBtn.addEventListener('click', copyToClipboard);
     
     // Format toggle buttons
@@ -127,12 +150,91 @@ async function pasteFromClipboard() {
     }
 }
 
+// Generate sample JSON
+function generateSample() {
+    const sampleJson = sampleJsonData[currentSampleIndex];
+    jsonInput.value = sampleJson;
+    formatJson();
+    
+    // Cycle to next sample for next click
+    currentSampleIndex = (currentSampleIndex + 1) % sampleJsonData.length;
+    
+    // Show visual feedback
+    const originalText = generateBtn.innerHTML;
+    generateBtn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        Generated!
+    `;
+    generateBtn.classList.add('btn-success');
+    
+    setTimeout(() => {
+        generateBtn.innerHTML = originalText;
+        generateBtn.classList.remove('btn-success');
+    }, 1500);
+}
+
 // Clear input
 function clearInput() {
     jsonInput.value = '';
     clearOutput();
     hideError();
     lastValidJson = null;
+}
+
+// Generate share link
+async function generateShareLink() {
+    const inputText = jsonInput.value.trim();
+    
+    if (!inputText) {
+        showError('No JSON to share. Add some JSON first!');
+        return;
+    }
+    
+    if (!lastValidJson) {
+        showError('Invalid JSON. Please fix errors before sharing.');
+        return;
+    }
+    
+    try {
+        // Use the input text (minified for shorter URLs)
+        const minifiedJson = JSON.stringify(lastValidJson);
+        const encodedJson = encodeURIComponent(minifiedJson);
+        const baseUrl = window.location.origin + window.location.pathname;
+        const shareUrl = `${baseUrl}?json=${encodedJson}`;
+        
+        // Check URL length (practical limit ~2000 characters)
+        if (shareUrl.length > 2000) {
+            showError('JSON too large to share via URL (limit: ~2000 characters). Try with smaller JSON.');
+            return;
+        }
+        
+        // Copy to clipboard
+        await navigator.clipboard.writeText(shareUrl);
+        
+        // Show success feedback
+        const originalText = shareBtn.innerHTML;
+        shareBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Link Copied!
+        `;
+        shareBtn.classList.add('btn-success');
+        
+        setTimeout(() => {
+            shareBtn.innerHTML = originalText;
+            shareBtn.classList.remove('btn-success');
+        }, 2000);
+        
+        // Also update the browser URL without reload
+        history.replaceState(null, null, shareUrl);
+        
+    } catch (error) {
+        showError('Failed to generate share link. Please try again.');
+        console.error('Share link error:', error);
+    }
 }
 
 // Copy to clipboard

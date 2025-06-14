@@ -11,7 +11,8 @@ A fast, beautiful, and privacy-focused JSON formatter and validator tool built f
 - ✨ **Beautiful Output** - Syntax highlighted and perfectly formatted
 - 🎨 **Dark/Light Mode** - Easy on the eyes, day or night
 - 📋 **Copy to Clipboard** - One-click copying
-- 🔗 **URL Sharing** - Share formatted JSON via URL parameters
+- 🔗 **URL Sharing** - Generate shareable links with JSON data
+- 🎲 **Sample Generator** - Try different JSON examples instantly
 - ⌨️ **Keyboard Shortcuts** - Developer-friendly shortcuts
 
 ## Keyboard Shortcuts
@@ -20,12 +21,18 @@ A fast, beautiful, and privacy-focused JSON formatter and validator tool built f
 - `Ctrl/Cmd + Shift + C` - Copy formatted JSON
 - `Ctrl/Cmd + K` - Clear input
 
-## URL Parameters
+## URL Sharing
 
-Share formatted JSON by appending `?json=` followed by URL-encoded JSON:
+### Generate Share Links
+Click the "Share" button to automatically generate a shareable URL with your JSON data. The link is copied to your clipboard and can be shared with others.
+
+### URL Parameters
+You can also manually create links by appending `?json=` followed by URL-encoded JSON:
 ```
 https://json.clocktowerassoc.com/?json=%7B%22name%22%3A%22Alice%22%7D
 ```
+
+**Note**: URLs are limited to ~2,000 characters for broad compatibility. Large JSON files may not be shareable via URL.
 
 ## Status & Monitoring
 
