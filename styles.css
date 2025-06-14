@@ -70,7 +70,7 @@
 }
 
 /* Dark mode variables */
-body.dark-mode {
+html.dark-mode {
   --bg-primary: var(--gray-900);
   --bg-secondary: var(--gray-800);
   --bg-tertiary: var(--gray-700);
@@ -132,7 +132,7 @@ body {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-body.dark-mode .header {
+html.dark-mode .header {
   background-color: rgba(17, 24, 39, 0.95);
   border-bottom-color: var(--gray-700);
 }
@@ -188,7 +188,7 @@ body.dark-mode .header {
   transform: translateY(-1px);
 }
 
-body.dark-mode .logo-badge-link:hover {
+html.dark-mode .logo-badge-link:hover {
   color: var(--primary-400);
   background-color: var(--primary-900);
 }
@@ -210,7 +210,7 @@ body.dark-mode .logo-badge-link:hover {
   opacity: 1;
 }
 
-body.dark-mode .version-badge {
+html.dark-mode .version-badge {
   color: var(--primary-400);
   background-color: var(--primary-900);
   border-color: var(--primary-800);
@@ -258,12 +258,12 @@ body.dark-mode .version-badge {
   border-color: var(--primary-500);
 }
 
-body.dark-mode .theme-toggle {
+html.dark-mode .theme-toggle {
   background-color: var(--gray-800);
   border-color: var(--gray-700);
 }
 
-body.dark-mode .theme-toggle:hover {
+html.dark-mode .theme-toggle:hover {
   background-color: var(--gray-700);
   color: var(--secondary-500);
   border-color: var(--secondary-500);
@@ -274,11 +274,11 @@ body.dark-mode .theme-toggle:hover {
   transition: opacity var(--transition-base);
 }
 
-body.light-mode .moon-icon {
+html.light-mode .moon-icon {
   display: none;
 }
 
-body.dark-mode .sun-icon {
+html.dark-mode .sun-icon {
   display: none;
 }
 
@@ -317,8 +317,8 @@ body.dark-mode .sun-icon {
   left: -200px;
 }
 
-body.dark-mode .main::before,
-body.dark-mode .main::after {
+html.dark-mode .main::before,
+html.dark-mode .main::after {
   opacity: 0.1;
 }
 
@@ -361,12 +361,12 @@ body.dark-mode .main::after {
   border-color: var(--primary-500);
 }
 
-body.dark-mode .hero-toggle {
+html.dark-mode .hero-toggle {
   background-color: var(--gray-800);
   border-color: var(--gray-700);
 }
 
-body.dark-mode .hero-toggle:hover {
+html.dark-mode .hero-toggle:hover {
   background-color: var(--gray-700);
   color: var(--secondary-500);
   border-color: var(--secondary-500);
@@ -526,11 +526,11 @@ body.dark-mode .hero-toggle:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-body.dark-mode .panel {
+html.dark-mode .panel {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
 }
 
-body.dark-mode .panel:hover {
+html.dark-mode .panel:hover {
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
 }
 
@@ -627,12 +627,12 @@ body.dark-mode .panel:hover {
   border-color: var(--gray-300);
 }
 
-body.dark-mode .btn-secondary {
+html.dark-mode .btn-secondary {
   background-color: var(--gray-700);
   border-color: var(--gray-600);
 }
 
-body.dark-mode .btn-secondary:hover {
+html.dark-mode .btn-secondary:hover {
   background-color: var(--gray-600);
   border-color: var(--gray-500);
 }
@@ -734,7 +734,7 @@ body.dark-mode .btn-secondary:hover {
   font-size: 0.875rem;
 }
 
-body.dark-mode .error-message {
+html.dark-mode .error-message {
   background-color: #7F1D1D;
   color: #FCA5A5;
 }
@@ -765,7 +765,7 @@ body.dark-mode .error-message {
   filter: blur(40px);
 }
 
-body.dark-mode .features {
+html.dark-mode .features {
   background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-700) 100%);
 }
 
@@ -801,12 +801,12 @@ body.dark-mode .features {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-body.dark-mode .feature {
+html.dark-mode .feature {
   background: var(--gray-800);
   border-color: var(--gray-700);
 }
 
-body.dark-mode .feature:hover {
+html.dark-mode .feature:hover {
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
 }
 
@@ -904,11 +904,11 @@ body.dark-mode .feature:hover {
 }
 
 /* Prism.js Overrides for Dark Mode */
-body.dark-mode pre[class*="language-"] {
+html.dark-mode pre[class*="language-"] {
   background: var(--gray-800);
 }
 
-body.dark-mode code[class*="language-"] {
+html.dark-mode code[class*="language-"] {
   color: var(--gray-100);
 }
 
