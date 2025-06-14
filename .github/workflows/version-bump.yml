@@ -1,0 +1,80 @@
+name: Update Version
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  update-version:
+    # Only run if this isn't already a version bump commit
+    if: "!contains(github.event.head_commit.message, 'chore: update version')"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch full history for accurate commit counting
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      
+      - name: Calculate version
+        id: version
+        run: |
+          # Count commits excluding version bump commits
+          REAL_COMMITS=$(git rev-list --count HEAD --grep="chore: update version" --invert-grep)
+          
+          # Get short commit hash
+          COMMIT_HASH=$(git rev-parse --short=6 HEAD)
+          
+          # Create version string
+          VERSION="1.${REAL_COMMITS}.${COMMIT_HASH}"
+          
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+          echo "real_commits=${REAL_COMMITS}" >> $GITHUB_OUTPUT
+          echo "commit_hash=${COMMIT_HASH}" >> $GITHUB_OUTPUT
+          
+          echo "📦 New version: ${VERSION}"
+          echo "🔢 Real commits: ${REAL_COMMITS}"
+          echo "🔗 Commit hash: ${COMMIT_HASH}"
+      
+      - name: Update version file
+        run: |
+          cat > version.json << EOF
+          {
+            "version": "${{ steps.version.outputs.version }}",
+            "major": 1,
+            "minor": ${{ steps.version.outputs.real_commits }},
+            "patch": "${{ steps.version.outputs.commit_hash }}",
+            "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "commit": "${{ github.sha }}",
+            "branch": "${{ github.ref_name }}"
+          }
+          EOF
+          
+          echo "Created version.json:"
+          cat version.json
+      
+      - name: Commit version update
+        run: |
+          git add version.json
+          
+          # Only commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No version changes to commit"
+          else
+            git commit -m "chore: update version to ${{ steps.version.outputs.version }}
+            
+            🤖 Auto-generated version bump
+            
+            Co-Authored-By: GitHub Actions <action@github.com>"
+            
+            git push origin main
+            
+            echo "✅ Version updated and pushed"
+          fi

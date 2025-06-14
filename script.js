@@ -5,6 +5,7 @@ const errorMessage = document.getElementById('errorMessage');
 const themeToggle = document.getElementById('themeToggle');
 const heroToggle = document.getElementById('heroToggle');
 const heroContent = document.getElementById('heroContent');
+const versionBadge = document.getElementById('versionBadge');
 const generateBtn = document.getElementById('generateBtn');
 const pasteBtn = document.getElementById('pasteBtn');
 const clearInputBtn = document.getElementById('clearInputBtn');
@@ -72,6 +73,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Check for URL parameter
     checkUrlParameter();
+    
+    // Load version information
+    loadVersion();
 });
 
 // Debounce function for performance
@@ -389,6 +393,25 @@ function checkUrlParameter() {
         } catch (error) {
             showError('Invalid JSON in URL parameter');
         }
+    }
+}
+
+// Load version information
+async function loadVersion() {
+    try {
+        const response = await fetch('./version.json');
+        if (response.ok) {
+            const versionData = await response.json();
+            versionBadge.textContent = `v${versionData.version}`;
+            versionBadge.title = `Version ${versionData.version}\nCommit: ${versionData.commit?.substring(0, 7) || 'unknown'}\nBuilt: ${versionData.timestamp || 'unknown'}`;
+        } else {
+            // Fallback if version.json doesn't exist
+            versionBadge.textContent = 'v1.0.0';
+        }
+    } catch (error) {
+        // Fallback for any fetch errors
+        versionBadge.textContent = 'v1.0.0';
+        console.log('Could not load version info:', error.message);
     }
 }
 
