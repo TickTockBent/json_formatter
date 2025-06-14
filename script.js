@@ -38,9 +38,9 @@ const sampleJsonData = [
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    // Load theme preference
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    document.body.className = `${savedTheme}-mode`;
+    // Theme is already applied by inline script, just sync the variable
+    const savedTheme = localStorage.getItem('theme') || 
+                      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     
     // Load hero collapse preference
     const heroCollapsed = localStorage.getItem('heroCollapsed') === 'true';
@@ -138,10 +138,10 @@ function displayFormattedJson(json) {
 
 // Theme toggle
 function toggleTheme() {
-    const currentTheme = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+    const currentTheme = document.documentElement.classList.contains('dark-mode') ? 'dark' : 'light';
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     
-    document.body.className = `${newTheme}-mode`;
+    document.documentElement.className = `${newTheme}-mode`;
     localStorage.setItem('theme', newTheme);
     
     // Re-highlight code for new theme
