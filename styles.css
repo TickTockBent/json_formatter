@@ -176,6 +176,23 @@ body.dark-mode .header {
   border-radius: var(--radius-sm);
 }
 
+.logo-badge-link {
+  text-decoration: none;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.logo-badge-link:hover {
+  color: var(--primary-500);
+  background-color: var(--primary-50);
+  transform: translateY(-1px);
+}
+
+body.dark-mode .logo-badge-link:hover {
+  color: var(--primary-400);
+  background-color: var(--primary-900);
+}
+
 .version-badge {
   font-size: 0.625rem;
   font-weight: 500;
