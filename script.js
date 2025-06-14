@@ -7,6 +7,7 @@ const heroToggle = document.getElementById('heroToggle');
 const heroContent = document.getElementById('heroContent');
 const versionBadge = document.getElementById('versionBadge');
 const generateBtn = document.getElementById('generateBtn');
+const fixBtn = document.getElementById('fixBtn');
 const pasteBtn = document.getElementById('pasteBtn');
 const clearInputBtn = document.getElementById('clearInputBtn');
 const shareBtn = document.getElementById('shareBtn');
@@ -54,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggle.addEventListener('click', toggleTheme);
     heroToggle.addEventListener('click', toggleHeroContent);
     generateBtn.addEventListener('click', generateSample);
+    fixBtn.addEventListener('click', fixJson);
     pasteBtn.addEventListener('click', pasteFromClipboard);
     clearInputBtn.addEventListener('click', clearInput);
     shareBtn.addEventListener('click', generateShareLink);
@@ -97,6 +99,7 @@ function formatJson() {
     
     if (!input) {
         clearOutput();
+        fixBtn.style.display = 'none';
         return;
     }
     
@@ -108,6 +111,9 @@ function formatJson() {
         // Clear error
         hideError();
         
+        // Hide fix button
+        fixBtn.style.display = 'none';
+        
         // Display formatted JSON
         displayFormattedJson(parsed);
         
@@ -116,6 +122,9 @@ function formatJson() {
         showError(error.message);
         clearOutput();
         lastValidJson = null;
+        
+        // Show fix button
+        fixBtn.style.display = 'inline-flex';
     }
 }
 
@@ -219,11 +228,148 @@ function generateSample() {
     }, 1500);
 }
 
+// Fix JSON
+function fixJson() {
+    const input = jsonInput.value.trim();
+    if (!input) return;
+    
+    let fixed = input;
+    let changesCount = 0;
+    const changes = [];
+    
+    try {
+        // 1. Remove trailing commas
+        const trailingCommaFix = fixed.replace(/,(\s*[}\]])/g, '$1');
+        if (trailingCommaFix !== fixed) {
+            changes.push('Removed trailing commas');
+            fixed = trailingCommaFix;
+            changesCount++;
+        }
+        
+        // 2. Add missing quotes around property names
+        const unquotedKeysFix = fixed.replace(/([{,]\s*)([a-zA-Z_$][a-zA-Z0-9_$]*)\s*:/g, '$1"$2":');
+        if (unquotedKeysFix !== fixed) {
+            changes.push('Added quotes around property names');
+            fixed = unquotedKeysFix;
+            changesCount++;
+        }
+        
+        // 3. Fix single quotes to double quotes
+        const singleQuotesFix = fixed.replace(/'([^'\\]*(\\.[^'\\]*)*)'/g, '"$1"');
+        if (singleQuotesFix !== fixed) {
+            changes.push('Changed single quotes to double quotes');
+            fixed = singleQuotesFix;
+            changesCount++;
+        }
+        
+        // 4. Add missing commas between properties
+        const missingCommasFix = fixed.replace(/([}\]"])\s*(["\[{])/g, '$1,$2');
+        if (missingCommasFix !== fixed) {
+            changes.push('Added missing commas');
+            fixed = missingCommasFix;
+            changesCount++;
+        }
+        
+        // 5. Try to balance brackets - simple cases
+        let openBraces = (fixed.match(/\{/g) || []).length;
+        let closeBraces = (fixed.match(/\}/g) || []).length;
+        let openBrackets = (fixed.match(/\[/g) || []).length;
+        let closeBrackets = (fixed.match(/\]/g) || []).length;
+        
+        // Add missing closing braces
+        if (openBraces > closeBraces) {
+            fixed += '}'.repeat(openBraces - closeBraces);
+            changes.push('Added missing closing braces');
+            changesCount++;
+        }
+        
+        // Add missing closing brackets
+        if (openBrackets > closeBrackets) {
+            fixed += ']'.repeat(openBrackets - closeBrackets);
+            changes.push('Added missing closing brackets');
+            changesCount++;
+        }
+        
+        // Remove extra closing braces (simple case)
+        if (closeBraces > openBraces) {
+            const extraBraces = closeBraces - openBraces;
+            for (let i = 0; i < extraBraces; i++) {
+                fixed = fixed.replace(/}$/, '');
+            }
+            changes.push('Removed extra closing braces');
+            changesCount++;
+        }
+        
+        // Remove extra closing brackets (simple case)
+        if (closeBrackets > openBrackets) {
+            const extraBrackets = closeBrackets - openBrackets;
+            for (let i = 0; i < extraBrackets; i++) {
+                fixed = fixed.replace(/]$/, '');
+            }
+            changes.push('Removed extra closing brackets');
+            changesCount++;
+        }
+        
+        // Test if the fixed JSON is valid
+        JSON.parse(fixed);
+        
+        // If we get here, the fix worked!
+        jsonInput.value = fixed;
+        formatJson();
+        
+        // Show success feedback
+        const originalText = fixBtn.innerHTML;
+        fixBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Fixed!
+        `;
+        fixBtn.classList.remove('btn-warning');
+        fixBtn.classList.add('btn-success');
+        
+        // Show what was changed
+        if (changes.length > 0) {
+            console.log(`JSON Fix applied ${changesCount} changes:`, changes);
+            // Could show this in a tooltip or notification
+        }
+        
+        setTimeout(() => {
+            fixBtn.innerHTML = originalText;
+            fixBtn.classList.remove('btn-success');
+            fixBtn.classList.add('btn-warning');
+        }, 3000);
+        
+    } catch (error) {
+        // Fix didn't work
+        const originalText = fixBtn.innerHTML;
+        fixBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            Can't Fix
+        `;
+        fixBtn.classList.remove('btn-warning');
+        fixBtn.classList.add('btn-danger');
+        
+        setTimeout(() => {
+            fixBtn.innerHTML = originalText;
+            fixBtn.classList.remove('btn-danger');
+            fixBtn.classList.add('btn-warning');
+        }, 3000);
+        
+        showError(`Unable to auto-fix: ${error.message}`);
+    }
+}
+
 // Clear input
 function clearInput() {
     jsonInput.value = '';
     clearOutput();
     hideError();
+    fixBtn.style.display = 'none';
     lastValidJson = null;
 }
 

@@ -669,6 +669,15 @@ html.dark-mode .btn-secondary:hover {
   background-color: #DC2626 !important;
 }
 
+.btn-warning {
+  background-color: #F59E0B !important;
+  color: white !important;
+}
+
+.btn-warning:hover {
+  background-color: #D97706 !important;
+}
+
 /* Format Toggle */
 .format-toggle {
   display: flex;
