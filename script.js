@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 
                       (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     
-    // Load hero collapse preference
+    // Hero state is already applied by inline script, just sync the classes
     const heroCollapsed = localStorage.getItem('heroCollapsed') === 'true';
     if (heroCollapsed) {
         heroContent.classList.add('collapsed');
@@ -158,10 +158,12 @@ function toggleHeroContent() {
     if (isCollapsed) {
         heroContent.classList.remove('collapsed');
         hero.classList.remove('collapsed');
+        document.documentElement.removeAttribute('data-hero-collapsed');
         localStorage.setItem('heroCollapsed', 'false');
     } else {
         heroContent.classList.add('collapsed');
         hero.classList.add('collapsed');
+        document.documentElement.setAttribute('data-hero-collapsed', 'true');
         localStorage.setItem('heroCollapsed', 'true');
     }
 }

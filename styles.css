@@ -381,6 +381,19 @@ html.dark-mode .hero-toggle:hover {
   transition: all var(--transition-slow);
 }
 
+/* Initial state based on data attribute (prevents flash) */
+html[data-hero-collapsed="true"] .hero-content {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+html[data-hero-collapsed="true"] .hero-toggle-icon {
+  transform: rotate(-90deg);
+}
+
+/* JavaScript-controlled states (after page load) */
 .hero-content.collapsed {
   max-height: 0;
   opacity: 0;

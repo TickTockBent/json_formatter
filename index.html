@@ -38,11 +38,17 @@
     
     <!-- Theme Detection Script (must run before CSS) -->
     <script>
-        // Apply theme immediately to prevent flash
+        // Apply theme and hero state immediately to prevent flash
         (function() {
             const savedTheme = localStorage.getItem('theme') || 
                               (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
             document.documentElement.className = `${savedTheme}-mode`;
+            
+            // Apply hero collapse state
+            const heroCollapsed = localStorage.getItem('heroCollapsed') === 'true';
+            if (heroCollapsed) {
+                document.documentElement.setAttribute('data-hero-collapsed', 'true');
+            }
         })();
     </script>
     
