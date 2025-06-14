@@ -3,6 +3,8 @@ const jsonInput = document.getElementById('jsonInput');
 const jsonOutput = document.getElementById('jsonOutput');
 const errorMessage = document.getElementById('errorMessage');
 const themeToggle = document.getElementById('themeToggle');
+const heroToggle = document.getElementById('heroToggle');
+const heroContent = document.getElementById('heroContent');
 const generateBtn = document.getElementById('generateBtn');
 const pasteBtn = document.getElementById('pasteBtn');
 const clearInputBtn = document.getElementById('clearInputBtn');
@@ -39,9 +41,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'light';
     document.body.className = `${savedTheme}-mode`;
     
+    // Load hero collapse preference
+    const heroCollapsed = localStorage.getItem('heroCollapsed') === 'true';
+    if (heroCollapsed) {
+        heroContent.classList.add('collapsed');
+        document.querySelector('.hero').classList.add('collapsed');
+    }
+    
     // Set up event listeners
     jsonInput.addEventListener('input', debounce(formatJson, 300));
     themeToggle.addEventListener('click', toggleTheme);
+    heroToggle.addEventListener('click', toggleHeroContent);
     generateBtn.addEventListener('click', generateSample);
     pasteBtn.addEventListener('click', pasteFromClipboard);
     clearInputBtn.addEventListener('click', clearInput);
@@ -133,6 +143,22 @@ function toggleTheme() {
     // Re-highlight code for new theme
     if (jsonOutput.textContent) {
         Prism.highlightElement(jsonOutput);
+    }
+}
+
+// Hero content toggle
+function toggleHeroContent() {
+    const hero = document.querySelector('.hero');
+    const isCollapsed = heroContent.classList.contains('collapsed');
+    
+    if (isCollapsed) {
+        heroContent.classList.remove('collapsed');
+        hero.classList.remove('collapsed');
+        localStorage.setItem('heroCollapsed', 'false');
+    } else {
+        heroContent.classList.add('collapsed');
+        hero.classList.add('collapsed');
+        localStorage.setItem('heroCollapsed', 'true');
     }
 }
 
