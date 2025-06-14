@@ -591,6 +591,25 @@ body.dark-mode .btn-secondary:hover {
   border-color: var(--gray-500);
 }
 
+/* Button State Styles */
+.btn-success {
+  background-color: #10B981 !important;
+  color: white !important;
+}
+
+.btn-success:hover {
+  background-color: #059669 !important;
+}
+
+.btn-danger {
+  background-color: #EF4444 !important;
+  color: white !important;
+}
+
+.btn-danger:hover {
+  background-color: #DC2626 !important;
+}
+
 /* Format Toggle */
 .format-toggle {
   display: flex;
