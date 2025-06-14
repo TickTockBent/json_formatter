@@ -49,6 +49,7 @@ jobs:
       
       - name: Update version file
         run: |
+          # Update version.json
           cat > version.json << EOF
           {
             "version": "${{ steps.version.outputs.version }}",
@@ -61,12 +62,25 @@ jobs:
           }
           EOF
           
+          # Update health.json with current version
+          cat > health.json << EOF
+          {
+            "status": "ok",
+            "service": "JSON Formatter",
+            "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "version": "${{ steps.version.outputs.version }}"
+          }
+          EOF
+          
           echo "Created version.json:"
           cat version.json
+          echo ""
+          echo "Updated health.json:"
+          cat health.json
       
       - name: Commit version update
         run: |
-          git add version.json
+          git add version.json health.json
           
           # Only commit if there are changes
           if git diff --staged --quiet; then

@@ -22,11 +22,26 @@ jobs:
       
       - name: Check health endpoint
         run: |
-          response=$(curl -s https://json.clocktowerassoc.com/health.json)
-          status=$(echo $response | grep -o '"status":"ok"')
-          if [ ! -z "$status" ]; then
-            echo "✅ Health check passed"
+          echo "🔍 Checking health endpoint..."
+          response=$(curl -s -w "HTTP_CODE:%{http_code}" https://json.clocktowerassoc.com/health.json)
+          http_code=$(echo "$response" | grep -o "HTTP_CODE:[0-9]*" | cut -d: -f2)
+          json_response=$(echo "$response" | sed 's/HTTP_CODE:[0-9]*$//')
+          
+          echo "📡 HTTP Status: $http_code"
+          echo "📄 Response: $json_response"
+          
+          if [ "$http_code" = "200" ]; then
+            status=$(echo "$json_response" | grep -o '"status":"ok"')
+            if [ ! -z "$status" ]; then
+              echo "✅ Health check passed"
+            else
+              echo "❌ Health check failed - status field not found"
+              echo "Expected: \"status\":\"ok\""
+              echo "Got: $json_response"
+              exit 1
+            fi
           else
-            echo "❌ Health check failed"
+            echo "❌ Health check failed - HTTP $http_code"
+            echo "Response: $json_response"
             exit 1
           fi
