@@ -1,9 +1,10 @@
 {
-  "version": "1.28.218196",
+  "version": "1.29.b2ba94",
   "major": 1,
-  "minor": 28,
-  "patch": "218196",
-  "timestamp": "2025-06-14T15:39:25Z",
-  "commit": "21819698eb3c132b889be6cc420d2dabd9954933",
+  "minor": 29,
+  "patch": "b2ba94",
+  "timestamp": "2025-06-14T15:42:48Z",
+  "commit": "b2ba94218f24a5684686fa753e4e307ab6b4d319",
+  "lastRealCommit": "b2ba94218f24a5684686fa753e4e307ab6b4d319",
   "branch": "main"
 }
