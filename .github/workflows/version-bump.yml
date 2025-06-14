@@ -33,8 +33,12 @@ jobs:
           # Count commits excluding version bump commits
           REAL_COMMITS=$(git rev-list --count HEAD --grep="chore: update version" --invert-grep)
           
-          # Get short commit hash
+          # Get short commit hash of current commit
           COMMIT_HASH=$(git rev-parse --short=6 HEAD)
+          
+          # Get the last real commit (excluding version bump commits)
+          LAST_REAL_COMMIT=$(git log --grep="chore: update version" --invert-grep --format="%H" -n 1)
+          LAST_REAL_COMMIT_SHORT=$(git rev-parse --short=6 $LAST_REAL_COMMIT)
           
           # Create version string
           VERSION="1.${REAL_COMMITS}.${COMMIT_HASH}"
@@ -42,10 +46,13 @@ jobs:
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           echo "real_commits=${REAL_COMMITS}" >> $GITHUB_OUTPUT
           echo "commit_hash=${COMMIT_HASH}" >> $GITHUB_OUTPUT
+          echo "last_real_commit=${LAST_REAL_COMMIT}" >> $GITHUB_OUTPUT
+          echo "last_real_commit_short=${LAST_REAL_COMMIT_SHORT}" >> $GITHUB_OUTPUT
           
           echo "📦 New version: ${VERSION}"
           echo "🔢 Real commits: ${REAL_COMMITS}"
-          echo "🔗 Commit hash: ${COMMIT_HASH}"
+          echo "🔗 Current commit hash: ${COMMIT_HASH}"
+          echo "🎯 Last real commit: ${LAST_REAL_COMMIT_SHORT}"
       
       - name: Update version file
         run: |
@@ -58,6 +65,7 @@ jobs:
             "patch": "${{ steps.version.outputs.commit_hash }}",
             "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
             "commit": "${{ github.sha }}",
+            "lastRealCommit": "${{ steps.version.outputs.last_real_commit }}",
             "branch": "${{ github.ref_name }}"
           }
           EOF

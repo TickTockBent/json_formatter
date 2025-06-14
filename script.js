@@ -551,11 +551,14 @@ async function loadVersion() {
         if (response.ok) {
             const versionData = await response.json();
             versionBadge.textContent = `v${versionData.version}`;
-            versionBadge.title = `Version ${versionData.version}\nCommit: ${versionData.commit?.substring(0, 7) || 'unknown'}\nBuilt: ${versionData.timestamp || 'unknown'}`;
+            const lastRealCommitShort = versionData.lastRealCommit?.substring(0, 7) || 'unknown';
+            versionBadge.title = `Version ${versionData.version}\nLast change: ${lastRealCommitShort}\nBuilt: ${versionData.timestamp || 'unknown'}`;
             
             // Set href to GitHub commit if commit hash is available
-            if (versionData.commit) {
-                versionBadge.href = `https://github.com/TickTockBent/json_formatter/commit/${versionData.commit}`;
+            // Use lastRealCommit if available, otherwise fall back to commit
+            const commitHash = versionData.lastRealCommit || versionData.commit;
+            if (commitHash) {
+                versionBadge.href = `https://github.com/TickTockBent/json_formatter/commit/${commitHash}`;
             }
         } else {
             // Fallback if version.json doesn't exist
