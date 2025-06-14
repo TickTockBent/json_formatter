@@ -1,0 +1,32 @@
+name: Website Uptime Check
+
+on:
+  schedule:
+    # Check every 5 minutes
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  uptime-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check website
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" https://json.clocktowerassoc.com)
+          if [ $response -eq 200 ]; then
+            echo "✅ Website is up (HTTP $response)"
+          else
+            echo "❌ Website is down (HTTP $response)"
+            exit 1
+          fi
+      
+      - name: Check health endpoint
+        run: |
+          response=$(curl -s https://json.clocktowerassoc.com/health.json)
+          status=$(echo $response | grep -o '"status":"ok"')
+          if [ ! -z "$status" ]; then
+            echo "✅ Health check passed"
+          else
+            echo "❌ Health check failed"
+            exit 1
+          fi

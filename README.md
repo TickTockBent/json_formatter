@@ -1,5 +1,7 @@
 # JSON Formatter
 
+[![Website Status](https://img.shields.io/website?url=https%3A%2F%2Fjson.clocktowerassoc.com&label=json.clocktowerassoc.com)](https://json.clocktowerassoc.com)
+
 A fast, beautiful, and privacy-focused JSON formatter and validator tool built for developers.
 
 ## Features
@@ -25,6 +27,10 @@ Share formatted JSON by appending `?json=` followed by URL-encoded JSON:
 https://json.clocktowerassoc.com/?json=%7B%22name%22%3A%22Alice%22%7D
 ```
 
+## Status & Monitoring
+
+The website includes a health check endpoint at `/health.json` that returns service status information. The status badge above automatically checks if the site is accessible.
+
 ## Deployment
 
 This tool is designed to be hosted on GitHub Pages. To deploy:
@@ -32,6 +38,17 @@ This tool is designed to be hosted on GitHub Pages. To deploy:
 1. Fork this repository
 2. Enable GitHub Pages in your repository settings
 3. The GitHub Actions workflow will automatically deploy your changes
+
+### Health Check
+A health check endpoint is available at `https://json.clocktowerassoc.com/health.json` that returns:
+```json
+{
+  "status": "ok",
+  "service": "JSON Formatter",
+  "timestamp": "static",
+  "version": "1.0.0"
+}
+```
 
 ## Technology Stack
 
