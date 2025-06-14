@@ -233,16 +233,36 @@ html.dark-mode .logo-badge-link:hover {
   border: 1px solid var(--primary-200);
   opacity: 0.8;
   transition: opacity var(--transition-base);
+  text-decoration: none;
 }
 
 .version-badge:hover {
   opacity: 1;
 }
 
+.version-badge-link {
+  text-decoration: none;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.version-badge-link:hover {
+  color: var(--primary-700);
+  background-color: var(--primary-100);
+  border-color: var(--primary-300);
+  transform: translateY(-1px);
+}
+
 html.dark-mode .version-badge {
   color: var(--primary-400);
   background-color: var(--primary-900);
   border-color: var(--primary-800);
+}
+
+html.dark-mode .version-badge-link:hover {
+  color: var(--primary-300);
+  background-color: var(--primary-800);
+  border-color: var(--primary-700);
 }
 ```
 
@@ -255,7 +275,7 @@ html.dark-mode .version-badge {
         <h1 class="logo-text">Tool Name</h1>
         <div class="logo-meta">
           <a href="https://www.clocktowerassoc.com" target="_blank" rel="noopener" class="logo-badge logo-badge-link">by Clocktower</a>
-          <span class="version-badge" id="versionBadge">v1.0.0</span>
+          <a href="#" class="version-badge version-badge-link" id="versionBadge" target="_blank" rel="noopener">v1.0.0</a>
         </div>
       </div>
       <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
@@ -849,13 +869,23 @@ async function loadVersion() {
         const response = await fetch('./version.json');
         if (response.ok) {
             const versionData = await response.json();
-            document.getElementById('versionBadge').textContent = `v${versionData.version}`;
-            document.getElementById('versionBadge').title = `Version ${versionData.version}\nCommit: ${versionData.commit?.substring(0, 7) || 'unknown'}\nBuilt: ${versionData.timestamp || 'unknown'}`;
+            const versionBadge = document.getElementById('versionBadge');
+            versionBadge.textContent = `v${versionData.version}`;
+            versionBadge.title = `Version ${versionData.version}\nCommit: ${versionData.commit?.substring(0, 7) || 'unknown'}\nBuilt: ${versionData.timestamp || 'unknown'}`;
+            
+            // Set href to GitHub commit if commit hash is available
+            if (versionData.commit) {
+                versionBadge.href = `https://github.com/USERNAME/REPO_NAME/commit/${versionData.commit}`;
+            }
         } else {
-            document.getElementById('versionBadge').textContent = 'v1.0.0';
+            const versionBadge = document.getElementById('versionBadge');
+            versionBadge.textContent = 'v1.0.0';
+            versionBadge.removeAttribute('href');
         }
     } catch (error) {
-        document.getElementById('versionBadge').textContent = 'v1.0.0';
+        const versionBadge = document.getElementById('versionBadge');
+        versionBadge.textContent = 'v1.0.0';
+        versionBadge.removeAttribute('href');
     }
 }
 

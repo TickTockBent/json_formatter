@@ -552,13 +552,20 @@ async function loadVersion() {
             const versionData = await response.json();
             versionBadge.textContent = `v${versionData.version}`;
             versionBadge.title = `Version ${versionData.version}\nCommit: ${versionData.commit?.substring(0, 7) || 'unknown'}\nBuilt: ${versionData.timestamp || 'unknown'}`;
+            
+            // Set href to GitHub commit if commit hash is available
+            if (versionData.commit) {
+                versionBadge.href = `https://github.com/TickTockBent/json_formatter/commit/${versionData.commit}`;
+            }
         } else {
             // Fallback if version.json doesn't exist
             versionBadge.textContent = 'v1.0.0';
+            versionBadge.removeAttribute('href');
         }
     } catch (error) {
         // Fallback for any fetch errors
         versionBadge.textContent = 'v1.0.0';
+        versionBadge.removeAttribute('href');
         console.log('Could not load version info:', error.message);
     }
 }
