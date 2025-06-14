@@ -78,4 +78,4 @@ MIT License - feel free to use this tool for any purpose.
 
 ---
 
-Built with ❤️ by [Clocktower & Associates](https://www.clocktowerassoc.com)
+Built by [Clocktower & Associates](https://www.clocktowerassoc.com)

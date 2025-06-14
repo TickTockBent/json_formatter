@@ -5,6 +5,10 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# Set permissions for the workflow
+permissions:
+  contents: write
+
 jobs:
   update-version:
     # Only run if this isn't already a version bump commit
