@@ -1,9 +1,9 @@
 {
-  "version": "1.18.01a393",
+  "version": "1.20.107951",
   "major": 1,
-  "minor": 18,
-  "patch": "01a393",
-  "timestamp": "2025-06-14T15:14:27Z",
-  "commit": "01a3931e72e39681923b6ac45612fcdf6ffcafe8",
+  "minor": 20,
+  "patch": "107951",
+  "timestamp": "2025-06-14T15:17:59Z",
+  "commit": "107951f49aea30e381f7e825b42679dd59cc0a39",
   "branch": "main"
 }
