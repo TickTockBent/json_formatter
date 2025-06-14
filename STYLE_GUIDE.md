@@ -153,7 +153,7 @@ background-clip: text;
 
 ## Component Library
 
-### Header
+### Header with Logo, Version, and Theme Toggle
 ```css
 .header {
   position: sticky;
@@ -165,6 +165,105 @@ background-clip: text;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   height: 4rem;
 }
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.logo-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  background: linear-gradient(135deg, var(--primary-500) 0%, var(--secondary-500) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  background-color: var(--bg-tertiary);
+  padding: 0.125rem var(--space-xs);
+  border-radius: var(--radius-sm);
+}
+
+.logo-badge-link {
+  text-decoration: none;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.logo-badge-link:hover {
+  color: var(--primary-500);
+  background-color: var(--primary-50);
+  transform: translateY(-1px);
+}
+
+html.dark-mode .logo-badge-link:hover {
+  color: var(--primary-400);
+  background-color: var(--primary-900);
+}
+
+.version-badge {
+  font-size: 0.625rem;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  color: var(--primary-600);
+  background-color: var(--primary-50);
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--primary-200);
+  opacity: 0.8;
+  transition: opacity var(--transition-base);
+}
+
+.version-badge:hover {
+  opacity: 1;
+}
+
+html.dark-mode .version-badge {
+  color: var(--primary-400);
+  background-color: var(--primary-900);
+  border-color: var(--primary-800);
+}
+```
+
+#### HTML Structure:
+```html
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <div class="logo">
+        <h1 class="logo-text">Tool Name</h1>
+        <div class="logo-meta">
+          <a href="https://www.clocktowerassoc.com" target="_blank" rel="noopener" class="logo-badge logo-badge-link">by Clocktower</a>
+          <span class="version-badge" id="versionBadge">v1.0.0</span>
+        </div>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <!-- Theme toggle icons -->
+      </button>
+    </div>
+  </div>
+</header>
 ```
 
 ### Container
@@ -244,6 +343,34 @@ background-clip: text;
   border-color: var(--gray-300);
 }
 
+/* Button State Styles */
+.btn-success {
+  background-color: #10B981 !important;
+  color: white !important;
+}
+
+.btn-success:hover {
+  background-color: #059669 !important;
+}
+
+.btn-danger {
+  background-color: #EF4444 !important;
+  color: white !important;
+}
+
+.btn-danger:hover {
+  background-color: #DC2626 !important;
+}
+
+.btn-warning {
+  background-color: #F59E0B !important;
+  color: white !important;
+}
+
+.btn-warning:hover {
+  background-color: #D97706 !important;
+}
+
 /* Button Shimmer Effect */
 .btn::before {
   content: '';
@@ -292,12 +419,84 @@ background-clip: text;
 }
 ```
 
-### Hero Section
+### Collapsible Hero Section
 ```css
 .hero {
   text-align: center;
   margin-bottom: var(--space-3xl);
   position: relative;
+}
+
+.hero-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  position: relative;
+}
+
+.hero-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: absolute;
+  right: -3rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hero-toggle:hover {
+  background-color: var(--bg-tertiary);
+  color: var(--primary-500);
+  border-color: var(--primary-500);
+}
+
+.hero-toggle-icon {
+  transition: transform var(--transition-base);
+}
+
+.hero-content {
+  overflow: hidden;
+  transition: all var(--transition-slow);
+}
+
+/* Initial state based on data attribute (prevents flash) */
+html[data-hero-collapsed="true"] .hero-content {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+html[data-hero-collapsed="true"] .hero-toggle-icon {
+  transform: rotate(-90deg);
+}
+
+/* JavaScript-controlled states (after page load) */
+.hero-content.collapsed {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.hero-content:not(.collapsed) {
+  max-height: 500px;
+  opacity: 1;
+  margin-top: var(--space-lg);
+  padding-top: 0;
+}
+
+.hero.collapsed .hero-toggle-icon {
+  transform: rotate(-90deg);
 }
 
 .hero-badge {
@@ -322,11 +521,67 @@ background-clip: text;
   flex-wrap: wrap;
 }
 
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-display);
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  margin-top: 0.25rem;
+}
+
 .stat-divider {
   width: 1px;
   height: 2.5rem;
   background-color: var(--border-color);
 }
+
+@media (max-width: 768px) {
+  .hero-toggle {
+    position: static;
+    transform: none;
+    margin-top: var(--space-sm);
+  }
+  
+  .stat-divider {
+    display: none;
+  }
+  
+  .hero-stats {
+    gap: var(--space-lg);
+  }
+}
+```
+
+#### HTML Structure:
+```html
+<section class="hero">
+  <div class="hero-header">
+    <div class="hero-badge">Developer Tool</div>
+    <h2 class="hero-title">Tool Name & Description</h2>
+    <button class="hero-toggle" id="heroToggle" aria-label="Toggle description">
+      <svg class="hero-toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+  </div>
+  <div class="hero-content" id="heroContent">
+    <p class="hero-subtitle">Tool description and benefits</p>
+    <div class="hero-stats">
+      <!-- Optional stats -->
+    </div>
+  </div>
+</section>
 ```
 
 ### Background Effects
@@ -449,13 +704,197 @@ width/height: 0 → 100% on hover
 opacity: 0.1
 ```
 
+### Footer
+```css
+.footer {
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  padding: var(--space-xl) 0;
+}
+
+.footer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .footer-content {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.footer-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.875rem;
+}
+
+.footer-link {
+  color: var(--primary-500);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.footer-link:hover {
+  color: var(--primary-600);
+  text-decoration: underline;
+}
+
+.footer-separator {
+  color: var(--text-tertiary);
+}
+```
+
+#### HTML Structure:
+```html
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <p class="footer-text">
+        Built by <a href="https://www.clocktowerassoc.com" target="_blank" rel="noopener" class="footer-link">Clocktower & Associates</a>
+      </p>
+      <div class="footer-links">
+        <a href="https://github.com/username/repo" target="_blank" rel="noopener" class="footer-link">GitHub</a>
+        <span class="footer-separator">•</span>
+        <a href="https://www.clocktowerassoc.com/support" target="_blank" rel="noopener" class="footer-link">Support Us</a>
+      </div>
+    </div>
+  </div>
+</footer>
+```
+
+## Automatic Version Numbering System
+
+### GitHub Actions Workflow
+Create `.github/workflows/version-bump.yml`:
+
+```yaml
+name: Update Version
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-version:
+    if: "!contains(github.event.head_commit.message, 'chore: update version')"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      
+      - name: Calculate version
+        id: version
+        run: |
+          REAL_COMMITS=$(git rev-list --count HEAD --grep="chore: update version" --invert-grep)
+          COMMIT_HASH=$(git rev-parse --short=6 HEAD)
+          VERSION="1.${REAL_COMMITS}.${COMMIT_HASH}"
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
+      
+      - name: Update version files
+        run: |
+          cat > version.json << EOF
+          {
+            "version": "${{ steps.version.outputs.version }}",
+            "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "commit": "${{ github.sha }}",
+            "branch": "${{ github.ref_name }}"
+          }
+          EOF
+          
+          cat > health.json << EOF
+          {
+            "status": "ok",
+            "service": "Tool Name",
+            "timestamp": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "version": "${{ steps.version.outputs.version }}"
+          }
+          EOF
+      
+      - name: Commit version update
+        run: |
+          git add version.json health.json
+          git commit -m "chore: update version to ${{ steps.version.outputs.version }}"
+          git push origin main
+```
+
+### Version Loading JavaScript
+```javascript
+// Load version information
+async function loadVersion() {
+    try {
+        const response = await fetch('./version.json');
+        if (response.ok) {
+            const versionData = await response.json();
+            document.getElementById('versionBadge').textContent = `v${versionData.version}`;
+            document.getElementById('versionBadge').title = `Version ${versionData.version}\nCommit: ${versionData.commit?.substring(0, 7) || 'unknown'}\nBuilt: ${versionData.timestamp || 'unknown'}`;
+        } else {
+            document.getElementById('versionBadge').textContent = 'v1.0.0';
+        }
+    } catch (error) {
+        document.getElementById('versionBadge').textContent = 'v1.0.0';
+    }
+}
+
+// Call during initialization
+document.addEventListener('DOMContentLoaded', () => {
+    loadVersion();
+});
+```
+
+## Flash Prevention System
+
+### Inline Theme & State Detection
+Add to `<head>` before CSS:
+
+```html
+<script>
+    // Apply theme and hero state immediately to prevent flash
+    (function() {
+        const savedTheme = localStorage.getItem('theme') || 
+                          (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.className = `${savedTheme}-mode`;
+        
+        // Apply hero collapse state
+        const heroCollapsed = localStorage.getItem('heroCollapsed') === 'true';
+        if (heroCollapsed) {
+            document.documentElement.setAttribute('data-hero-collapsed', 'true');
+        }
+    })();
+</script>
+```
+
 ## Dark Mode
 
 ### Implementation
 - Use CSS custom properties for all colors
-- Toggle class on body: `light-mode` / `dark-mode`
+- Toggle class on `html` element: `light-mode` / `dark-mode`
 - Store preference in localStorage
 - Respect system preference as default
+- Apply immediately via inline script to prevent flash
 
 ### Dark Mode Adjustments
 - Increase shadow opacity (0.1 → 0.3)
@@ -525,21 +964,61 @@ opacity: 0.1
 
 When creating a new tool, ensure you:
 
+### **Core Styling & Layout**
 - [ ] Copy the color palette and CSS variables
 - [ ] Include Inter and Poppins fonts from Google Fonts
-- [ ] Implement both light and dark modes
-- [ ] Add the header with logo and theme toggle
-- [ ] Include hero section with badge and gradient title
-- [ ] Add gradient blur orbs to main content
-- [ ] Style buttons with hover effects and shimmer
-- [ ] Include footer with Clocktower attribution
-- [ ] Add all required meta tags
-- [ ] Create favicon and og-image
-- [ ] Set up GitHub Actions deployment
-- [ ] Test on multiple screen sizes
+- [ ] Implement both light and dark modes with flash prevention
+- [ ] Add gradient blur orbs to main content background
+
+### **Header Components**
+- [ ] Add logo with gradient text effect
+- [ ] Include clickable "by Clocktower" badge linking to www.clocktowerassoc.com
+- [ ] Add version badge with monospace font
+- [ ] Implement theme toggle with hover effects
+
+### **Hero Section**
+- [ ] Add collapsible hero section with toggle button
+- [ ] Include "Developer Tool" badge
+- [ ] Add hero stats section (optional)
+- [ ] Implement collapse state persistence
+
+### **Interactive Elements**
+- [ ] Style buttons with shimmer effects and state variations
+- [ ] Add focus states for accessibility
+- [ ] Implement hover animations on cards/panels
+- [ ] Include proper button state styles (success, warning, danger)
+
+### **Footer**
+- [ ] Add footer with Clocktower attribution link
+- [ ] Include GitHub and Support Us links
+- [ ] Implement responsive footer layout
+
+### **Version System**
+- [ ] Set up GitHub Actions version-bump workflow
+- [ ] Create version.json and health.json files
+- [ ] Add version loading JavaScript
+- [ ] Configure repository permissions for Actions
+
+### **SEO & Performance**
+- [ ] Add all required meta tags (OpenGraph, Twitter, etc.)
+- [ ] Create favicon.svg and og-image.svg
+- [ ] Add robots.txt and sitemap.xml
+- [ ] Set up GitHub Actions deployment workflow
+
+### **Quality Assurance**
+- [ ] Test flash prevention for dark mode and hero collapse
+- [ ] Validate on multiple screen sizes and devices
+- [ ] Check keyboard navigation and accessibility
 - [ ] Validate HTML and CSS
-- [ ] Check dark mode styling
-- [ ] Ensure fast load times
+- [ ] Test version numbering system
+- [ ] Verify all links work correctly
+- [ ] Ensure fast load times and smooth animations
+
+### **Content & Documentation**
+- [ ] Update tool-specific text and descriptions
+- [ ] Test health check endpoint
+- [ ] Update README with tool-specific features
+- [ ] Verify uptime monitoring works
 
 ## CSS Reset & Base Styles
 
