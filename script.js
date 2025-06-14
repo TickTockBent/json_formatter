@@ -165,14 +165,26 @@ function toggleHeroContent() {
 // Paste from clipboard
 async function pasteFromClipboard() {
     try {
-        const text = await navigator.clipboard.readText();
-        jsonInput.value = text;
-        formatJson();
+        if (navigator.clipboard && navigator.clipboard.readText) {
+            const text = await navigator.clipboard.readText();
+            jsonInput.value = text;
+            formatJson();
+        } else {
+            // Fallback for browsers that don't support clipboard API
+            // Focus the input and let user paste manually
+            jsonInput.focus();
+            jsonInput.placeholder = 'Paste your JSON here with Ctrl+V...';
+            setTimeout(() => {
+                jsonInput.placeholder = 'Paste your JSON here... e.g., {"name": "Alice", "age": 30}';
+            }, 3000);
+        }
     } catch (error) {
-        // Fallback for browsers that don't support clipboard API
+        // If clipboard read fails, focus input for manual paste
         jsonInput.focus();
-        document.execCommand('paste');
-        formatJson();
+        jsonInput.placeholder = 'Paste your JSON here with Ctrl+V...';
+        setTimeout(() => {
+            jsonInput.placeholder = 'Paste your JSON here... e.g., {"name": "Alice", "age": 30}';
+        }, 3000);
     }
 }
 
@@ -236,18 +248,49 @@ async function generateShareLink() {
             return;
         }
         
-        // Copy to clipboard
-        await navigator.clipboard.writeText(shareUrl);
+        // Copy to clipboard with fallback
+        let copySuccess = false;
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(shareUrl);
+                copySuccess = true;
+            } else {
+                // Fallback for non-HTTPS environments
+                const textarea = document.createElement('textarea');
+                textarea.value = shareUrl;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                copySuccess = document.execCommand('copy');
+                document.body.removeChild(textarea);
+            }
+        } catch (error) {
+            // Final fallback - show the URL in a prompt
+            copySuccess = false;
+        }
         
-        // Show success feedback
+        // Show feedback based on copy success
         const originalText = shareBtn.innerHTML;
-        shareBtn.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
-            Link Copied!
-        `;
-        shareBtn.classList.add('btn-success');
+        if (copySuccess) {
+            shareBtn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Link Copied!
+            `;
+            shareBtn.classList.add('btn-success');
+        } else {
+            // Show the URL in a prompt as final fallback
+            prompt('Copy this share link:', shareUrl);
+            shareBtn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Link Ready!
+            `;
+            shareBtn.classList.add('btn-success');
+        }
         
         setTimeout(() => {
             shareBtn.innerHTML = originalText;
@@ -269,11 +312,29 @@ async function copyToClipboard() {
     
     if (!outputText) return;
     
+    let copySuccess = false;
     try {
-        await navigator.clipboard.writeText(outputText);
-        
-        // Show success feedback
-        const originalText = copyBtn.innerHTML;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            await navigator.clipboard.writeText(outputText);
+            copySuccess = true;
+        } else {
+            // Fallback method
+            const textarea = document.createElement('textarea');
+            textarea.value = outputText;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            copySuccess = document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+    } catch (error) {
+        copySuccess = false;
+    }
+    
+    // Show feedback
+    const originalText = copyBtn.innerHTML;
+    if (copySuccess) {
         copyBtn.innerHTML = `
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="20 6 9 17 4 12"></polyline>
@@ -281,21 +342,22 @@ async function copyToClipboard() {
             Copied!
         `;
         copyBtn.classList.add('btn-success');
-        
-        setTimeout(() => {
-            copyBtn.innerHTML = originalText;
-            copyBtn.classList.remove('btn-success');
-        }, 2000);
-        
-    } catch (error) {
-        // Fallback method
-        const textarea = document.createElement('textarea');
-        textarea.value = outputText;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
+    } else {
+        copyBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            Failed
+        `;
+        copyBtn.classList.add('btn-danger');
     }
+    
+    setTimeout(() => {
+        copyBtn.innerHTML = originalText;
+        copyBtn.classList.remove('btn-success', 'btn-danger');
+    }, 2000);
 }
 
 // Error handling
